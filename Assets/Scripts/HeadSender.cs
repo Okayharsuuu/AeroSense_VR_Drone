@@ -9,7 +9,7 @@ public class HeadSender : MonoBehaviour
     public XROrigin xrOrigin;
 
     [Header("UDP")]
-    public string jetsonIP = "100.93.247.80";
+    public string jetsonIP = "JETSON_IP_HERE";
     public int port = 5005;
 
     [Header("Smoothing")]
@@ -108,4 +108,4 @@ public class HeadSender : MonoBehaviour
         SendGimbal(0f, 0f);
         if (client != null) client.Close();
     }
-}
+}

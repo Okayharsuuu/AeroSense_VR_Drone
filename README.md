@@ -4,8 +4,8 @@ A quadcopter with a gimbal camera that you look through using a Meta Quest 3. Pu
 what the drone sees, live, and the camera turns wherever you turn your head. A Jetson on the drone runs person
 detection on the video at the same time, so the headset can show you where people are.
 
-Built by our team as a Design Credit project at IIT Jodhpur (2026). We started from a camera on a bench, got the
-headset steering the gimbal, then designed a mount and moved the whole system onto the drone.
+Built as a Design Credit project at Clarity Lab, CSE, IIT Jodhpur (2026), under Prof. Hardik Jain. We got the headset
+steering the gimbal on the bench, designed a mount, moved the whole system onto the drone and flight-tested it.
 
 ![The AeroSense VR Drone with the Meta Quest 3](docs/images/drone.jpg)
 
@@ -22,9 +22,11 @@ SIYI A8 mini ──Ethernet──► Jetson (video server, YOLOv8n, MiDaS, SAM2)
 | [`Assets/`](Assets/) | The Unity project for the Quest app (scripts in `Assets/Scripts/`, scene in `Assets/Scenes/`) and the two Jetson scripts in `Assets/jetson files/` | change what the headset shows or how it talks to the drone |
 | [`cad/`](cad/README.md) | The 3D-printed Jetson and battery mount, as a SolidWorks part and an STL | print or modify the mount |
 | [`tools/`](tools/) | `gimbal_test.py` for checking the gimbal on its own, and the Linux build fix | debug the gimbal or build on Ubuntu |
-| [`docs/`](docs/progress-report.md) | Progress report: what works, what we measured, what's next | see where the project stands |
+| [`docs/`](docs/progress-report.md) | Progress report: what works, what we measured, future work | see what was tested and measured |
 
 ## Quick start
+
+First put your own addresses in, since the repo ships with placeholders (see [Network](#3-network)).
 
 On the Jetson, in two terminals:
 
@@ -33,7 +35,7 @@ python3 ~/gimbal_controller.py
 python3 ~/a8_stream_server.py
 ```
 
-Open `http://100.93.247.80:8080/stream` in a browser to check the video. Then on the Quest, switch Tailscale on,
+Open `http://<jetson-ip>:8080/stream` in a browser to check the video. Then on the Quest, switch Tailscale on,
 open **VR Drone Aerosense** from App Library → Unknown Sources, look straight ahead and press **A**.
 
 ---
@@ -54,8 +56,8 @@ gimbal. Passthrough mode shows your real surroundings with green outlines of the
 
 | Part | What it does |
 |---|---|
-| SIYI A8 mini | 3-axis gimbal camera, mounted upside down under the drone. Fixed IP `192.168.144.25` |
-| NVIDIA Jetson | Onboard computer. Talks to the camera over Ethernet at `192.168.144.30` |
+| SIYI A8 mini | 3-axis gimbal camera, mounted upside down under the drone. Connected to the Jetson over Ethernet |
+| NVIDIA Jetson | Onboard computer. Runs the video server, detection and gimbal control |
 | Jetson and battery mount | Our 3D-printed mount, clips onto the frame tubes. See [`cad/`](cad/README.md) |
 | Meta Quest 3 | Runs the app |
 | Flight controller | ArduPilot (not yet talking to the Jetson) |
@@ -69,11 +71,18 @@ and `a8_stream_server.py` rotates the picture 180°. If you ever remount the cam
 
 ## 3. Network
 
-Everything talks over one Tailscale network. The Jetson is at `100.93.247.80`, and that address is set in four
-scripts and in `SampleScene`. If it ever changes, this replaces it everywhere:
+Everything talks over one Tailscale network. The repo has placeholders instead of real addresses, so fill them
+in before running anything:
+
+| Placeholder | Where it is | What to put |
+|---|---|---|
+| `JETSON_IP_HERE` | Four scripts in `Assets/Scripts/` and `SampleScene` | The Jetson's Tailscale address |
+| `CAMERA_IP_HERE` | `a8_stream_server.py`, `gimbal_controller.py`, `tools/gimbal_test.py` | The A8 mini's address on the Ethernet link |
+
+This fills in the Jetson address everywhere in the Unity project (use the same command to change it later):
 
 ```bash
-grep -rl "100.93.247.80" Assets | xargs sed -i 's/100\.93\.247\.80/NEW.IP.HERE/g'
+grep -rl "JETSON_IP_HERE" Assets | xargs sed -i 's/JETSON_IP_HERE/<jetson-ip>/g'
 ```
 
 Two things we learned the hard way:
@@ -92,7 +101,7 @@ sudo systemctl restart NetworkManager
 Send it an angle from any machine on the network (yaw 30°, pitch 0°):
 
 ```bash
-python3 -c "import socket;s=socket.socket(2,2);s.sendto(b'30,0',('100.93.247.80',5005))"
+python3 -c "import socket;s=socket.socket(2,2);s.sendto(b'30,0',('<jetson-ip>',5005))"
 ```
 
 If that doesn't move it, stop the controller and run `tools/gimbal_test.py` on the Jetson. It talks to the gimbal
@@ -102,7 +111,7 @@ problem.
 The Jetson runs its scripts from its home folder. After changing one there, copy it back into the repo:
 
 ```bash
-scp jetson@100.93.247.80:~/a8_stream_server.py jetson@100.93.247.80:~/gimbal_controller.py "Assets/jetson files/"
+scp <user>@<jetson-ip>:~/a8_stream_server.py <user>@<jetson-ip>:~/gimbal_controller.py "Assets/jetson files/"
 ```
 
 ## 5. Building the Quest app
@@ -129,13 +138,14 @@ bash tools/patch_meta_sdk_linux.sh
 
 It makes a patched local copy of the SDK in `Packages/` (gitignored). Windows doesn't need this.
 
-## 6. Where we are
+## 6. Flight test
 
-The headset loop works: live video in VR and a gimbal that follows your head on both axes. The camera, Jetson and
-mount are on the drone. Next up is flight testing, starting the Jetson scripts at boot, and feeding the drone's
-position from ArduPilot into the passthrough view. The full list is in the
+We flew the drone with the full system on board and it worked well. The live video came through in the Quest 3,
+and the gimbal followed the headset on both axes during flight. Results and future work are in the
 [progress report](docs/progress-report.md).
 
 ## Team
 
 Aman Sharma · Aditya Agarwal · Anuj Dhaked · Aditya Prasad
+
+Supervised by Prof. Hardik Jain, Clarity Lab, CSE, IIT Jodhpur.

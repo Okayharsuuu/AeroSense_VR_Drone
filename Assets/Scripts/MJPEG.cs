@@ -8,7 +8,7 @@ public class MJPEGStream : MonoBehaviour
 {
     public Renderer screen;
     public string publicUrl =
-        "http://100.93.247.80:8080/stream";
+        "http://JETSON_IP_HERE:8080/stream";
 
     private const int READ_TIMEOUT_MS = 1000;
     private const int CONNECT_TIMEOUT_MS = 3000;
@@ -212,4 +212,4 @@ public class MJPEGStream : MonoBehaviour
         catch { }
 #endif
     }
-}
+}

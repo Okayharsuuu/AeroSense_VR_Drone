@@ -221,7 +221,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   xrOrigin: {fileID: 1241364539}
-  jetsonIP: 100.93.247.80
+  jetsonIP: JETSON_IP_HERE
   port: 5005
   smoothing: 0.1
   modeManager: {fileID: 1766127746}
@@ -415,7 +415,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   screen: {fileID: 1429373123}
-  publicUrl: http://100.93.247.80:8080/stream
+  publicUrl: http://JETSON_IP_HERE:8080/stream
 --- !u!1 &1548251155
 GameObject:
   m_ObjectHideFlags: 0
@@ -494,7 +494,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bc92977fb1848e41b3d165a1983a4c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jetsonHostname: 100.93.247.80
+  jetsonHostname: JETSON_IP_HERE
   jetsonPort: 8080
   pollInterval: 0.1
   cameraPoseOffset: {x: 0, y: 0, z: 0}
@@ -577,7 +577,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   poseFetcher: {fileID: 1669548018}
-  jetsonHostname: 100.93.247.80
+  jetsonHostname: JETSON_IP_HERE
   jetsonPort: 8080
   pollInterval: 0.15
   streamWidth: 640

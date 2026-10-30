@@ -3,6 +3,7 @@ import threading
 import time
 import numpy as np
 import json
+import os
 import socket
 import subprocess
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -26,8 +27,10 @@ DEPTH_ALPHA   = 0.15
 
 PERSON_CLASS_ID = 0
 
+CAMERA_IP     = "CAMERA_IP_HERE"  # SIYI A8 mini address on the Ethernet link
+
 SAM2_CONFIG   = "configs/sam2.1/sam2.1_hiera_t.yaml"
-SAM2_CKPT     = "/home/jetson/sam2/checkpoints/sam2.1_hiera_tiny.pt"
+SAM2_CKPT     = os.path.expanduser("~/sam2/checkpoints/sam2.1_hiera_tiny.pt")
 SAM2_FPS      = 5
 SAM2_INTERVAL = 1.0 / SAM2_FPS
 
@@ -124,7 +127,7 @@ print(f"[INFO] MiDaS loaded on {device}")
 # =====================================
 
 gst_pipeline = (
-    f"rtspsrc location=rtsp://192.168.144.25:8554/main.264 "
+    f"rtspsrc location=rtsp://{CAMERA_IP}:8554/main.264 "
     f"latency=0 protocols=tcp ! "
     "rtph265depay ! "
     "h265parse ! "
@@ -162,7 +165,7 @@ def broadcast_ip():
             for line in result.stdout.split('\n'):
                 if ('inet ' in line
                         and '127.0.0.1'     not in line
-                        and '192.168.144'   not in line):
+                        and CAMERA_IP.rsplit('.', 1)[0] not in line):  # skip the camera's subnet
                     ip = line.strip().split()[1].split('/')[0]
                     if not ip.startswith('100.'):
                         local_ip = ip

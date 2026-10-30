@@ -23,7 +23,7 @@ public class DetectionOverlay : MonoBehaviour
 {
     public CameraPoseFetcher poseFetcher;
     [Header("Network")]
-    public string jetsonHostname = "100.93.247.80";
+    public string jetsonHostname = "JETSON_IP_HERE";
     public int jetsonPort = 8080;
     public float pollInterval = 0.15f;
 
@@ -542,4 +542,4 @@ public class DetectionOverlay : MonoBehaviour
         Gizmos.DrawLine(cameraWorldPosition,
                         cameraWorldPosition + rot * Vector3.forward * 2f);
     }
-}
+}

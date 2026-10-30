@@ -14,7 +14,7 @@ public class CameraPoseData
 public class CameraPoseFetcher : MonoBehaviour
 {
     [Header("Network")]
-    public string jetsonHostname = "100.93.247.80";
+    public string jetsonHostname = "JETSON_IP_HERE";
     public int jetsonPort = 8080;
     public float pollInterval = 0.1f;
 
@@ -56,4 +56,4 @@ public class CameraPoseFetcher : MonoBehaviour
             yield return new WaitForSeconds(pollInterval);
         }
     }
-}
+}

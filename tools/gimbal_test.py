@@ -8,7 +8,7 @@ import socket
 import struct
 import time
 
-GIMBAL = ("192.168.144.25", 37260)
+GIMBAL = ("CAMERA_IP_HERE", 37260)
 
 
 def _make_table():

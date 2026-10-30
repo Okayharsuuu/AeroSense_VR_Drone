@@ -6,7 +6,7 @@ import time
 # Config
 # =====================
 LISTEN_PORT   = 5005              # UDP port HeadSender sends to
-GIMBAL_IP     = "192.168.144.25"  # A8 mini default IP
+GIMBAL_IP     = "CAMERA_IP_HERE"  # SIYI A8 mini address on the Ethernet link
 GIMBAL_PORT   = 37260             # A8 mini SDK port
 
 # Direction fixes for the upside-down mount. Use 1 or -1.
